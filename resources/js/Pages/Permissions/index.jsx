@@ -4,7 +4,7 @@ import Container from '@/Components/Container';
 import Table from '@/Components/Table';
 import Button from '@/Components/Button';
 import Pagination from '@/Components/Pagination';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';4
 import Search from '@/Components/Search';
 import hasAnyPermission from '@/Utils/Permissions';
 export default function Index({auth}) {
