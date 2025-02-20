@@ -7,16 +7,17 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
+
 class UserController extends Controller implements HasMiddleware
 {
 
     public static function middleware()
     {
         return [
-            new Middleware('permission:users index', only : ['index']),
-            new Middleware('permission:users create', only : ['create', 'store']),
-            new Middleware('permission:users edit', only : ['edit', 'update   ']),
-            new Middleware('permission:users delete', only : ['destroy']),
+            new Middleware('permission:users index', only: ['index']),
+            new Middleware('permission:users create', only: ['create', 'store']),
+            new Middleware('permission:users edit', only: ['edit', 'update   ']),
+            new Middleware('permission:users delete', only: ['destroy']),
         ];
     }
     /**
@@ -26,12 +27,12 @@ class UserController extends Controller implements HasMiddleware
     {
         // get all users
         $users = User::with('roles')
-            ->when(request('search'), fn($query) => $query->where('name', 'like', '%'.request('search').'%'))
+            ->when(request('search'), fn($query) => $query->where('name', 'like', '%' . request('search') . '%'))
             ->latest()
             ->paginate(6);
 
         // render view
-        return inertia('Users/Index', ['users' => $users,'filters' => $request->only(['search'])]);
+        return inertia('Users/Index', ['users' => $users, 'filters' => $request->only(['search'])]);
     }
 
     /**
@@ -39,10 +40,10 @@ class UserController extends Controller implements HasMiddleware
      */
     public function create()
     {
-         // get roles
-         $roles = Role::latest()->get();
-         // render view
-         return inertia('Users/Create', ['roles' => $roles]);
+        // get roles
+        $roles = Role::latest()->get();
+        // render view
+        return inertia('Users/Create', ['roles' => $roles]);
     }
 
     /**
@@ -50,8 +51,8 @@ class UserController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
-         // validate request
-         $request->validate([
+        // validate request
+        $request->validate([
             'name' => 'required|min:3|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed|min:4',
@@ -103,7 +104,7 @@ class UserController extends Controller implements HasMiddleware
         // validate request
         $request->validate([
             'name' => 'required|min:3|max:255',
-            'email' => 'required|email|unique:users,email,'.$user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
             'selectedRoles' => 'required|array|min:1',
         ]);
 

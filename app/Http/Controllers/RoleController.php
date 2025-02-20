@@ -1,34 +1,52 @@
 <?php
 
 namespace App\Http\Controllers;
-
+//Menentukan namespace tempat controller ini berada.
 use Illuminate\Http\Request;
+//Mengimpor class Request untuk menangani input dari pengguna.
 use Illuminate\Routing\Controllers\HasMiddleware;
+//Menggunakan middleware di dalam controller.
 use Illuminate\Routing\Controllers\Middleware;
+//Middleware digunakan untuk melindungi route, misalnya hanya admin yang bisa mengakses fitur ini.
 use Spatie\Permission\Models\Role;
+//Mengimpor model Role dan Permission dari package Spatie.
+//Role digunakan untuk mengelola peran pengguna (misalnya: admin, editor, user).
 use Spatie\Permission\Models\Permission;
+//Permission digunakan untuk mengatur izin spesifik (misalnya: create-post, delete-user).
+
+
 class RoleController extends Controller implements HasMiddleware // Implement Middleware Spatie
+//Membuat RoleController sebagai turunan dari Controller.
+//Mengimplementasikan HasMiddleware, yang berarti controller ini menggunakan middleware untuk membatasi akses.
 {
     public static function middleware()
     {
         return [
             new Middleware('permission:roles index', only: ['index']),
+            //permission:roles index → Hanya pengguna dengan izin "roles index" yang bisa mengakses index()
             new Middleware('permission:roles create', only: ['create', 'store']),
+            //permission:roles create → Hanya pengguna dengan izin "roles create" yang bisa membuat role (create(), store()).
             new Middleware('permission:roles edit', only: ['edit', 'update']),
+            //permission:roles edit → Hanya pengguna dengan izin "roles edit" yang bisa mengedit role (edit(), update()).
             new Middleware('permission:roles delete', only: ['destroy']),
+            //ermission:roles delete → Hanya pengguna dengan izin "roles delete" yang bisa menghapus role (destroy()).
         ];
     }
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
+    //Fungsi: Menampilkan daftar roles berdasarkan request dari pengguna.
     {
         // get roles
         $roles = Role::select('id', 'name')
+        //Role::select('id', 'name') → Mengambil ID dan nama role dari database
             ->with('permissions:id,name')
+            //>with('permissions:id,name') → Mengambil data izin (permissions) yang terkait dengan role.
             ->when($request->search,fn($search) => $search->where('name', 'like', '%'.$request->search.'%'))
-            ->latest()
-            ->paginate(6);
+            //->when($request->search, fn($search) => $search->where('name', 'like', '%'.$request->search.'%'))
+            ->latest() //Mengurutkan dari yang terbaru.
+            ->paginate(6); // Menampilkan 6 data per halaman.
 
         // render view
         return inertia('Roles/Index', ['roles' => $roles,'filters' => $request->only(['search'])]);

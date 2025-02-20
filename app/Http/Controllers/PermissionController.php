@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers; //namespace App\Http\Controllers digunakan untuk mengorganisir (terstruktur dan mudah dikelola)controller di Laravel agar lebih terstruktur dan terhindar dari bentrokan nama antar kelas.
-
 use Illuminate\Http\Request; //
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
