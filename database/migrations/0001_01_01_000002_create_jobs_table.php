@@ -9,9 +9,11 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up(): void //Fungsi up() 
     {
-        Schema::create('jobs', function (Blueprint $table) {
+        Schema::create('jobs', function (Blueprint $table) { 
+        //(Membuat Tabel) Membuat tabel jobs
+       //Fungsi:Menyimpan daftar pekerjaan (jobs) yang akan dieksekusi secara asinkron oleh sistem queue.    
             $table->id();
             $table->string('queue')->index();
             $table->longText('payload');
@@ -22,6 +24,7 @@ return new class extends Migration
         });
 
         Schema::create('job_batches', function (Blueprint $table) {
+        ////Membuat tabel job_batches fungsiMenyimpan informasi batch untuk menjalankan banyak pekerjaan secara bersamaan.    
             $table->string('id')->primary();
             $table->string('name');
             $table->integer('total_jobs');
@@ -34,7 +37,9 @@ return new class extends Migration
             $table->integer('finished_at')->nullable();
         });
 
-        Schema::create('failed_jobs', function (Blueprint $table) {
+        Schema::create('failed_jobs', function (Blueprint $table) { 
+        //Membuat tabel failed_jobs   
+        //Menyimpan pekerjaan yang gagal agar bisa diperbaiki atau dijalankan ulang.    
             $table->id();
             $table->string('uuid')->unique();
             $table->text('connection');
@@ -49,6 +54,9 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
+    //Fungsi down() (Menghapus Tabel)
+    //Fungsi:Menghapus tabel jobs, job_batches, dan failed_jobs jika migration dibatalkan.
+
     {
         Schema::dropIfExists('jobs');
         Schema::dropIfExists('job_batches');
